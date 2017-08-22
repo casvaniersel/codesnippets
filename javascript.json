@@ -1,0 +1,74 @@
+{
+	"NameSpace for closure": {
+		"prefix": "closure",
+		"body": [
+			"window.${1:NameSpace} = window.${1:NameSpace} || {};",
+			"${1:NameSpace}.${2:Closure} = function ($) {",
+			"\tvar _init = function () {",
+			"\t\t$0",
+			"\t};",
+			"\treturn {",
+			"\t\tinit: _init",
+			"\t}",
+			"}(jQuery);"
+		],
+		"description": "Sets up a closure in namespace"
+	},
+
+	"SharePoint Ready": {
+		"prefix": "sp-jquery-ready",
+		"body": [
+			"jQuery(function () {",
+				"\t//Load after sp.js is loaded and if not loaded, load it ourselfs using SOD",
+				"\tif(!ExecuteOrDelayUntilScriptLoaded(${1:Closure}.init, \"sp.js\")) {",
+					"\t\tLoadSodByKey(\"sp.js\");",
+				"\t}",
+			"});"
+		],
+		"description": "On SP ready using jQuery"
+	},
+
+	"SharePoint API GET": {
+		"prefix": "sp-api-get",
+		"body": [
+			"var _${1:function} = function (listTitle) {",
+				"\tvar def = $.Deferred();",
+				"\t$.ajax({",
+					"\t\turl: _spPageContextInfo.${2:site}AbsoluteUrl + \"/_api/web/lists/getByTitle('\" + listTitle + \"')/items\",",
+					"\t\tmethod: \"GET\",",
+					"\t\theaders: { \"Accept\": \"application/json; odata=verbose\" },",
+					"\t\tsuccess: function (data) { def.resolve(data); },",
+					"\t\terror: function (xhr) { def.reject(xhr); }",
+				"\t});",
+				"\treturn def.promise();",
+			"};"
+		],
+		"description": "The body of a function that gets SP data from REST"
+	},
+
+	"SharePoint API POST": {
+		"prefix": "sp-api-post",
+		"body": [
+			"var _${1:function} = function (listTitle, item) {",
+				"\tvar def = $.Deferred();",
+				"\tvar itemUpdate = { __metadata: { \"type\": item.__metadata.type }, Title: \"${3:fieldValue}\", $0 };",
+				"\t$.ajax({",
+					"\t\turl: _spPageContextInfo.${2:site}AbsoluteUrl + \"/_api/web/lists/getByTitle('\" + listTitle + \"')/items(\" + item.Id + \")\",",
+					"\t\tmethod: \"POST\",",
+					"\t\tdata: JSON.stringify(itemUpdate),",
+					"\t\theaders: {",
+						"\t\t\t\"X-RequestDigest\": $(\"#__REQUESTDIGEST\").val(),",
+						"\t\t\t\"IF-MATCH\": \"*\",",
+						"\t\t\t\"X-HTTP-Method\": \"MERGE\",",
+						"\t\t\t\"accept\": \"application/json;odata=verbose\",",
+						"\t\t\t\"content-type\": \"application/json;odata=verbose\"",
+					"\t\t},",
+					"\t\tsuccess: function (data) { def.resolve(data); },",
+					"\t\terror: function (xhr) { def.reject(xhr); }",
+				"\t});",
+				"\treturn def.promise();",
+			"};"
+		],
+		"description": "Post data to SP using REST"
+	}
+}
