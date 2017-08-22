@@ -1,2 +1,5 @@
 # codesnippets
-Coed Snippets
+Code Snippets
+
+## JavaScript
+SharePoint patterns
